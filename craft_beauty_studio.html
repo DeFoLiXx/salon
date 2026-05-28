@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Craft Beauty Studio — Місце твоєї краси</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root {
+    --gold: #c9a96e;
+    --gold-light: #e2c896;
+    --cream: #f0e8d8;
+    --dark: #080808;
+    --dark-2: #111111;
+    --dark-3: #1a1a1a;
+    --dark-4: #222222;
+    --text-muted: #888;
+    --text-light: #ccc;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(201,169,110,0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease;
+  }
+  .cursor-ring.hovered {
+    width: 56px;
+    height: 56px;
+    border-color: var(--gold);
+  }
+
+  /* Typography */
+  .font-serif { font-family: 'Cormorant Garamond', serif; }
+
+  /* Grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* Gold line */
+  .gold-line {
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+    display: inline-block;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 2px; }
+  ::-webkit-scrollbar-track { background: var(--dark); }
+  ::-webkit-scrollbar-thumb { background: var(--gold); }
+
+  /* Navigation */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 24px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.6s ease;
+  }
+  nav.scrolled {
+    background: rgba(8,8,8,0.92);
+    backdrop-filter: blur(20px);
+    padding: 16px 48px;
+    border-bottom: 1px solid rgba(201,169,110,0.1);
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--cream);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 36px; }
+  .nav-links a {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--gold);
+    transition: width 0.3s ease;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--dark);
+    background: var(--gold);
+    padding: 10px 24px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  .nav-cta:hover { background: var(--gold-light); }
+
+  /* Hamburger */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: none;
+    z-index: 200;
+  }
+  .hamburger span {
+    width: 24px;
+    height: 1px;
+    background: var(--cream);
+    transition: all 0.3s ease;
+  }
+  .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+
+  /* Mobile menu */
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    background: var(--dark);
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  .mobile-menu.open { opacity: 1; pointer-events: all; }
+  .mobile-menu a {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: var(--cream);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .mobile-menu a:hover { color: var(--gold); }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 60% at 30% 50%, rgba(201,169,110,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 70% 30%, rgba(201,169,110,0.04) 0%, transparent 60%),
+      var(--dark);
+  }
+  .hero-number {
+    position: absolute;
+    right: 6vw;
+    bottom: 15vh;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(120px, 20vw, 260px);
+    font-weight: 300;
+    color: rgba(201,169,110,0.04);
+    line-height: 1;
+    user-select: none;
+    letter-spacing: -0.05em;
+  }
+  .hero-content {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    padding: 0 24px;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 9vw, 110px);
+    font-weight: 300;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 32px;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .hero-sub {
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 52px;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-primary {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--dark);
+    background: var(--gold);
+    padding: 14px 36px;
+    text-decoration: none;
+    transition: all 0.4s ease;
+    display: inline-block;
+  }
+  .btn-primary:hover {
+    background: var(--gold-light);
+    transform: translateY(-1px);
+  }
+  .btn-ghost {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cream);
+    border: 1px solid rgba(201,169,110,0.3);
+    padding: 14px 36px;
+    text-decoration: none;
+    transition: all 0.4s ease;
+    display: inline-block;
+  }
+  .btn-ghost:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    z-index: 2;
+  }
+  .hero-scroll span {
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(0.8); }
+    50% { opacity: 1; transform: scaleY(1); }
+  }
+
+  /* Marquee */
+  .marquee-wrap {
+    overflow: hidden;
+    border-top: 1px solid rgba(201,169,110,0.1);
+    border-bottom: 1px solid rgba(201,169,110,0.1);
+    padding: 18px 0;
+    background: var(--dark-2);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 0;
+    animation: marquee 20s linear infinite;
+    width: max-content;
+  }
+  .marquee-item {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    white-space: nowrap;
+  }
+  .marquee-dot {
+    width: 3px;
+    height: 3px;
+    background: var(--gold);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* Section base */
+  .section { padding: 100px 0; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+  .section-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(38px, 5vw, 64px);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin-bottom: 24px;
+  }
+  .section-title em { font-style: italic; color: var(--gold); }
+
+  /* About */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .about-text p {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--text-light);
+    margin-bottom: 20px;
+  }
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: rgba(201,169,110,0.1);
+    margin-top: 48px;
+  }
+  .stat-item {
+    background: var(--dark);
+    padding: 28px;
+    text-align: center;
+  }
+  .stat-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .about-image-wrap {
+    position: relative;
+  }
+  .about-img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    filter: brightness(0.85) contrast(1.05);
+  }
+  .about-img-placeholder {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: var(--dark-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(201,169,110,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+  .about-img-placeholder::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(135deg, transparent 40%, rgba(201,169,110,0.05) 50%, transparent 60%);
+    animation: shimmer 3s ease-in-out infinite;
+  }
+  @keyframes shimmer {
+    0%, 100% { transform: translateX(-100%) rotate(0); }
+    50% { transform: translateX(100%) rotate(0); }
+  }
+  .about-accent {
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    width: 140px;
+    height: 140px;
+    border: 1px solid rgba(201,169,110,0.2);
+    z-index: -1;
+  }
+
+  /* Services */
+  .services-bg { background: var(--dark-2); }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(201,169,110,0.08);
+    margin-top: 64px;
+  }
+  .service-card {
+    background: var(--dark-2);
+    padding: 44px 36px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s ease;
+    cursor: none;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--gold);
+    transition: width 0.5s ease;
+  }
+  .service-card:hover::before { width: 100%; }
+  .service-card:hover { background: var(--dark-3); }
+  .service-icon {
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+  .service-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    margin-bottom: 12px;
+    color: var(--cream);
+  }
+  .service-desc {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+  .service-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    color: var(--gold);
+    font-weight: 300;
+  }
+  .service-price span {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    margin-left: 4px;
+  }
+  .service-num {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    color: rgba(201,169,110,0.2);
+    letter-spacing: 0.1em;
+  }
+
+  /* Gallery */
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto;
+    gap: 2px;
+    margin-top: 64px;
+  }
+  .gallery-item {
+    overflow: hidden;
+    position: relative;
+    background: var(--dark-3);
+    cursor: none;
+  }
+  .gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+  .gallery-item:nth-child(5) { grid-column: span 2; }
+  .gallery-placeholder {
+    width: 100%;
+    aspect-ratio: 1;
+    background: var(--dark-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .gallery-item:nth-child(1) .gallery-placeholder { aspect-ratio: 1; }
+  .gallery-item:nth-child(5) .gallery-placeholder { aspect-ratio: 2/1; }
+  .gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(8,8,8,0.6);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .gallery-item:hover .gallery-overlay { opacity: 1; }
+  .gallery-overlay-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cream);
+  }
+  .gallery-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s ease;
+    display: block;
+  }
+  .gallery-item:hover .gallery-img { transform: scale(1.05); }
+
+  /* Team */
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-top: 64px;
+  }
+  .team-card {
+    position: relative;
+    overflow: hidden;
+    cursor: none;
+  }
+  .team-photo {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.85) grayscale(0.2);
+    transition: all 0.6s ease;
+  }
+  .team-photo-placeholder {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: var(--dark-3);
+    border: 1px solid rgba(201,169,110,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .team-card:hover .team-photo {
+    filter: brightness(0.9) grayscale(0);
+    transform: scale(1.03);
+  }
+  .team-info {
+    padding: 20px 0 0;
+  }
+  .team-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--cream);
+    margin-bottom: 4px;
+  }
+  .team-role {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .team-card-line {
+    width: 0;
+    height: 1px;
+    background: var(--gold);
+    margin-top: 12px;
+    transition: width 0.4s ease;
+  }
+  .team-card:hover .team-card-line { width: 40px; }
+
+  /* Reviews */
+  .reviews-bg { background: var(--dark-2); }
+  .reviews-slider {
+    position: relative;
+    margin-top: 64px;
+    overflow: hidden;
+  }
+  .reviews-track {
+    display: flex;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .review-card {
+    min-width: 100%;
+    padding: 0 80px;
+    text-align: center;
+  }
+  .review-stars {
+    color: var(--gold);
+    font-size: 18px;
+    letter-spacing: 4px;
+    margin-bottom: 28px;
+  }
+  .review-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 2.5vw, 26px);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--cream);
+    max-width: 700px;
+    margin: 0 auto 32px;
+  }
+  .review-author {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .review-date {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    letter-spacing: 0.1em;
+  }
+  .slider-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 48px;
+  }
+  .slider-btn {
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgba(201,169,110,0.3);
+    background: transparent;
+    color: var(--gold);
+    cursor: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.3s ease;
+  }
+  .slider-btn:hover {
+    border-color: var(--gold);
+    background: rgba(201,169,110,0.08);
+  }
+  .slider-dots { display: flex; gap: 8px; }
+  .slider-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(201,169,110,0.3);
+    cursor: none;
+    transition: all 0.3s;
+  }
+  .slider-dot.active {
+    background: var(--gold);
+    width: 20px;
+    border-radius: 2px;
+  }
+
+  /* Booking */
+  .booking-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+    margin-top: 64px;
+  }
+  .booking-info p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text-muted);
+    margin-bottom: 40px;
+  }
+  .contact-list { display: flex; flex-direction: column; gap: 16px; }
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 14px;
+    color: var(--text-light);
+  }
+  .contact-item-icon {
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(201,169,110,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .booking-form { display: flex; flex-direction: column; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-label {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .form-input {
+    background: var(--dark-2);
+    border: 1px solid rgba(201,169,110,0.15);
+    color: var(--cream);
+    padding: 14px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    width: 100%;
+    -webkit-appearance: none;
+    cursor: none;
+  }
+  .form-input:focus { border-color: var(--gold); }
+  .form-input option { background: var(--dark-2); }
+  .form-textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+  .form-submit {
+    background: var(--gold);
+    color: var(--dark);
+    border: none;
+    padding: 16px 40px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: none;
+    transition: all 0.3s ease;
+    margin-top: 8px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  .form-submit:hover { background: var(--gold-light); }
+  .form-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  /* Form success */
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: 48px 32px;
+    border: 1px solid rgba(201,169,110,0.2);
+  }
+  .form-success-icon {
+    font-size: 40px;
+    margin-bottom: 20px;
+  }
+  .form-success h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .form-success p {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* Socials */
+  .social-links { display: flex; gap: 12px; margin-top: 32px; }
+  .social-link {
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgba(201,169,110,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
+  .social-link:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(201,169,110,0.05);
+  }
+
+  /* Float CTA */
+  .float-cta {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 90;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+  }
+  .float-btn {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    cursor: none;
+  }
+  .float-btn:hover { transform: scale(1.1); }
+  .float-tg { background: #229ED9; color: white; }
+  .float-vb { background: #7360F2; color: white; }
+  .float-call { background: var(--gold); color: var(--dark); }
+  .float-label {
+    position: absolute;
+    right: 62px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    background: var(--dark-2);
+    padding: 4px 10px;
+    border: 1px solid rgba(201,169,110,0.1);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  .float-btn:hover + .float-label { opacity: 1; }
+  .float-btn-wrap { position: relative; display: flex; align-items: center; }
+
+  /* Footer */
+  footer {
+    background: var(--dark-2);
+    border-top: 1px solid rgba(201,169,110,0.1);
+    padding: 60px 0 32px;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 48px;
+  }
+  .footer-brand p {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text-muted);
+    margin-top: 16px;
+  }
+  .footer-col-title {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+  .footer-links { display: flex; flex-direction: column; gap: 10px; }
+  .footer-links a {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .footer-links a:hover { color: var(--cream); }
+  .footer-bottom {
+    border-top: 1px solid rgba(201,169,110,0.08);
+    padding-top: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-copy {
+    font-size: 11px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.1em;
+  }
+
+  /* Fade-in animation */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .fade-up-delay-1 { transition-delay: 0.1s; }
+  .fade-up-delay-2 { transition-delay: 0.2s; }
+  .fade-up-delay-3 { transition-delay: 0.3s; }
+  .fade-up-delay-4 { transition-delay: 0.4s; }
+  .fade-up-delay-5 { transition-delay: 0.5s; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--dark-3);
+    border: 1px solid rgba(201,169,110,0.2);
+    padding: 14px 28px;
+    font-size: 13px;
+    color: var(--cream);
+    z-index: 999;
+    opacity: 0;
+    transition: all 0.4s ease;
+    white-space: nowrap;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .container { padding: 0 32px; }
+    nav { padding: 20px 32px; }
+    nav.scrolled { padding: 14px 32px; }
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+    .team-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  }
+
+  @media (max-width: 768px) {
+    .container { padding: 0 20px; }
+    nav { padding: 18px 20px; }
+    nav.scrolled { padding: 12px 20px; }
+    .nav-links, .nav-cta { display: none; }
+    .hamburger { display: flex; }
+    .section { padding: 72px 0; }
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .about-image-wrap { order: -1; }
+    .about-img-placeholder { aspect-ratio: 4/3; }
+    .services-grid { grid-template-columns: 1fr; }
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    .gallery-item:nth-child(1) { grid-column: span 2; }
+    .gallery-item:nth-child(5) { grid-column: span 2; }
+    .team-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .review-card { padding: 0 24px; }
+    .booking-grid { grid-template-columns: 1fr; gap: 40px; }
+    .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+    .float-cta { bottom: 20px; right: 20px; }
+    .hero-number { font-size: 30vw; bottom: 10vh; right: 4vw; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast"></div>
+
+<!-- Navigation -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">Craft<span>'20</span> Beauty Studio</a>
+  <div class="nav-links">
+    <a href="#about">Про нас</a>
+    <a href="#services">Послуги</a>
+    <a href="#gallery">Роботи</a>
+    <a href="#team">Команда</a>
+    <a href="#reviews">Відгуки</a>
+  </div>
+  <a href="#booking" class="nav-cta">Записатися</a>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="toggleMenu()">Про нас</a>
+  <a href="#services" onclick="toggleMenu()">Послуги</a>
+  <a href="#gallery" onclick="toggleMenu()">Роботи</a>
+  <a href="#team" onclick="toggleMenu()">Команда</a>
+  <a href="#reviews" onclick="toggleMenu()">Відгуки</a>
+  <a href="#booking" onclick="toggleMenu()">Записатися</a>
+</div>
+
+<!-- Hero -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-number">20</div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="gold-line"></span>
+      Salon de beauté · Kyiv · est.2020
+      <span class="gold-line"></span>
+    </div>
+    <h1 class="hero-title">
+      Місце<br><em>твоєї</em><br>краси
+    </h1>
+    <p class="hero-sub">Осокорки · Позняки · Київ</p>
+    <div class="hero-actions">
+      <a href="#booking" class="btn-primary">Записатися</a>
+      <a href="#gallery" class="btn-ghost">Переглянути роботи</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- Marquee -->
+<div class="marquee-wrap">
+  <div class="marquee-track" id="marqueeTrack">
+    <div class="marquee-item">Фарбування<span class="marquee-dot"></span>Стрижки<span class="marquee-dot"></span>Зачіски<span class="marquee-dot"></span>Макіяж<span class="marquee-dot"></span>Манікюр<span class="marquee-dot"></span>Педикюр<span class="marquee-dot"></span>Брови<span class="marquee-dot"></span>Lamі вій<span class="marquee-dot"></span>Наречена<span class="marquee-dot"></span></div>
+    <div class="marquee-item">Фарбування<span class="marquee-dot"></span>Стрижки<span class="marquee-dot"></span>Зачіски<span class="marquee-dot"></span>Макіяж<span class="marquee-dot"></span>Манікюр<span class="marquee-dot"></span>Педикюр<span class="marquee-dot"></span>Брови<span class="marquee-dot"></span>Lamі вій<span class="marquee-dot"></span>Наречена<span class="marquee-dot"></span></div>
+    <div class="marquee-item">Фарбування<span class="marquee-dot"></span>Стрижки<span class="marquee-dot"></span>Зачіски<span class="marquee-dot"></span>Макіяж<span class="marquee-dot"></span>Манікюр<span class="marquee-dot"></span>Педикюр<span class="marquee-dot"></span>Брови<span class="marquee-dot"></span>Lamі вій<span class="marquee-dot"></span>Наречена<span class="marquee-dot"></span></div>
+    <div class="marquee-item">Фарбування<span class="marquee-dot"></span>Стрижки<span class="marquee-dot"></span>Зачіски<span class="marquee-dot"></span>Макіяж<span class="marquee-dot"></span>Манікюр<span class="marquee-dot"></span>Педикюр<span class="marquee-dot"></span>Брови<span class="marquee-dot"></span>Lamі вій<span class="marquee-dot"></span>Наречена<span class="marquee-dot"></span></div>
+  </div>
+</div>
+
+<!-- About -->
+<section class="section" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-text">
+        <div class="section-eyebrow fade-up">
+          <span class="gold-line"></span> Про студію
+        </div>
+        <h2 class="section-title fade-up fade-up-delay-1">
+          Краса — це<br><em>мистецтво</em>
+        </h2>
+        <p class="fade-up fade-up-delay-2">
+          Craft Beauty Studio — простір, де кожна деталь продумана до досконалості. З 2020 року ми створюємо образи, які підкреслюють індивідуальність кожної клієнтки.
+        </p>
+        <p class="fade-up fade-up-delay-3">
+          Наші майстри — сертифіковані фахівці з багаторічним досвідом. Ми використовуємо тільки преміум-матеріали провідних світових брендів.
+        </p>
+        <div class="about-stats fade-up fade-up-delay-4">
+          <div class="stat-item">
+            <div class="stat-number">5+</div>
+            <div class="stat-label">Років досвіду</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">1k+</div>
+            <div class="stat-label">Публікацій</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">8</div>
+            <div class="stat-label">Майстрів</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Задоволених</div>
+          </div>
+        </div>
+      </div>
+      <div class="about-image-wrap fade-up fade-up-delay-2">
+        <div class="about-img-placeholder">
+          <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="30" cy="22" r="10" stroke="rgba(201,169,110,0.3)" stroke-width="1"/>
+            <path d="M10 50c0-11 9-20 20-20s20 9 20 20" stroke="rgba(201,169,110,0.3)" stroke-width="1" fill="none"/>
+          </svg>
+        </div>
+        <div class="about-accent"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services -->
+<section class="section services-bg" id="services">
+  <div class="container">
+    <div class="fade-up">
+      <div class="section-eyebrow"><span class="gold-line"></span> Наші послуги</div>
+      <h2 class="section-title">Що ми <em>пропонуємо</em></h2>
+    </div>
+    <div class="services-grid">
+      <div class="service-card fade-up fade-up-delay-1">
+        <span class="service-num">01</span>
+        <div class="service-icon">✂️</div>
+        <div class="service-name">Стрижка & Укладання</div>
+        <p class="service-desc">Авторські стрижки та укладки від провідних стилістів студії.</p>
+        <div class="service-price">від 450 <span>грн</span></div>
+      </div>
+      <div class="service-card fade-up fade-up-delay-2">
+        <span class="service-num">02</span>
+        <div class="service-icon">🎨</div>
+        <div class="service-name">Фарбування</div>
+        <p class="service-desc">Balayage, омбре, highlights та складне колористичне фарбування.</p>
+        <div class="service-price">від 1200 <span>грн</span></div>
+      </div>
+      <div class="service-card fade-up fade-up-delay-3">
+        <span class="service-num">03</span>
+        <div class="service-icon">💄</div>
+        <div class="service-name">Макіяж</div>
+        <p class="service-desc">Денний, вечірній, весільний макіяж. Уроки макіяжу з майстром.</p>
+        <div class="service-price">від 800 <span>грн</span></div>
+      </div>
+      <div class="service-card fade-up fade-up-delay-1">
+        <span class="service-num">04</span>
+        <div class="service-icon">💅</div>
+        <div class="service-name">Манікюр & Педикюр</div>
+        <p class="service-desc">Класичний, апаратний, гель-лак. Дизайн нігтів будь-якої складності.</p>
+        <div class="service-price">від 350 <span>грн</span></div>
+      </div>
+      <div class="service-card fade-up fade-up-delay-2">
+        <span class="service-num">05</span>
+        <div class="service-icon">👁️</div>
+        <div class="service-name">Брови & Вії</div>
+        <p class="service-desc">Корекція та фарбування брів, ламінування та нарощення вій.</p>
+        <div class="service-price">від 400 <span>грн</span></div>
+      </div>
+      <div class="service-card fade-up fade-up-delay-3">
+        <span class="service-num">06</span>
+        <div class="service-icon">👰</div>
+        <div class="service-name">Образ нареченої</div>
+        <p class="service-desc">Весільні зачіски та макіяж. Пробний образ, виїзд до локації.</p>
+        <div class="service-price">від 2500 <span>грн</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Gallery -->
+<section class="section" id="gallery">
+  <div class="container">
+    <div class="fade-up">
+      <div class="section-eyebrow"><span class="gold-line"></span> Наші роботи</div>
+      <h2 class="section-title">Галерея <em>краси</em></h2>
+    </div>
+  </div>
+  <div style="padding: 0 48px; max-width: 1200px; margin: 0 auto;">
+    <div class="gallery-grid fade-up fade-up-delay-1">
+      <div class="gallery-item">
+        <div class="gallery-placeholder" style="aspect-ratio:1;">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="5" y="5" width="30" height="30" stroke="rgba(201,169,110,0.2)" stroke-width="1"/><circle cx="20" cy="16" r="5" stroke="rgba(201,169,110,0.2)" stroke-width="1"/><path d="M8 35c0-7 5-12 12-12s12 5 12 12" stroke="rgba(201,169,110,0.2)" stroke-width="1" fill="none"/></svg>
+        </div>
+        <div class="gallery-overlay"><span class="gallery-overlay-text">Makіяж</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="5" y="5" width="30" height="30" stroke="rgba(201,169,110,0.2)" stroke-width="1"/><circle cx="20" cy="16" r="5" stroke="rgba(201,169,110,0.2)" stroke-width="1"/></svg>
+        </div>
+        <div class="gallery-overlay"><span class="gallery-overlay-text">Стрижка</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="5" y="5" width="30" height="30" stroke="rgba(201,169,110,0.2)" stroke-width="1"/><circle cx="20" cy="16" r="5" stroke="rgba(201,169,110,0.2)" stroke-width="1"/></svg>
+        </div>
+        <div class="gallery-overlay"><span class="gallery-overlay-text">Брови</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="5" y="5" width="30" height="30" stroke="rgba(201,169,110,0.2)" stroke-width="1"/><circle cx="20" cy="16" r="5" stroke="rgba(201,169,110,0.2)" stroke-width="1"/></svg>
+        </div>
+        <div class="gallery-overlay"><span class="gallery-overlay-text">Манікюр</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-placeholder" style="aspect-ratio:2/1;">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="5" y="5" width="30" height="30" stroke="rgba(201,169,110,0.2)" stroke-width="1"/><circle cx="20" cy="16" r="5" stroke="rgba(201,169,110,0.2)" stroke-width="1"/></svg>
+        </div>
+        <div class="gallery-overlay"><span class="gallery-overlay-text">Фарбування</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="5" y="5" width="30" height="30" stroke="rgba(201,169,110,0.2)" stroke-width="1"/><circle cx="20" cy="16" r="5" stroke="rgba(201,169,110,0.2)" stroke-width="1"/></svg>
+        </div>
+        <div class="gallery-overlay"><span class="gallery-overlay-text">Зачіска</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="5" y="5" width="30" height="30" stroke="rgba(201,169,110,0.2)" stroke-width="1"/><circle cx="20" cy="16" r="5" stroke="rgba(201,169,110,0.2)" stroke-width="1"/></svg>
+        </div>
+        <div class="gallery-overlay"><span class="gallery-overlay-text">Вії</span></div>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:40px;" class="fade-up">
+      <a href="https://www.instagram.com/craft_beauty.studio" target="_blank" class="btn-ghost">
+        Більше робіт в Instagram
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Team -->
+<section class="section" id="team" style="background: var(--dark-2);">
+  <div class="container">
+    <div class="fade-up">
+      <div class="section-eyebrow"><span class="gold-line"></span> Наші майстри</div>
+      <h2 class="section-title">Команда <em>профі</em></h2>
+    </div>
+    <div class="team-grid">
+      <div class="team-card fade-up fade-up-delay-1">
+        <div class="team-photo-placeholder">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="18" r="10" stroke="rgba(201,169,110,0.25)" stroke-width="1"/><path d="M6 44c0-10 8-18 18-18s18 8 18 18" stroke="rgba(201,169,110,0.25)" stroke-width="1" fill="none"/></svg>
+        </div>
+        <div class="team-info">
+          <div class="team-name">Анастасія</div>
+          <div class="team-role">Колорист</div>
+          <div class="team-card-line"></div>
+        </div>
+      </div>
+      <div class="team-card fade-up fade-up-delay-2">
+        <div class="team-photo-placeholder">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="18" r="10" stroke="rgba(201,169,110,0.25)" stroke-width="1"/><path d="M6 44c0-10 8-18 18-18s18 8 18 18" stroke="rgba(201,169,110,0.25)" stroke-width="1" fill="none"/></svg>
+        </div>
+        <div class="team-info">
+          <div class="team-name">Валерія</div>
+          <div class="team-role">Візажист</div>
+          <div class="team-card-line"></div>
+        </div>
+      </div>
+      <div class="team-card fade-up fade-up-delay-3">
+        <div class="team-photo-placeholder">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="18" r="10" stroke="rgba(201,169,110,0.25)" stroke-width="1"/><path d="M6 44c0-10 8-18 18-18s18 8 18 18" stroke="rgba(201,169,110,0.25)" stroke-width="1" fill="none"/></svg>
+        </div>
+        <div class="team-info">
+          <div class="team-name">Марина</div>
+          <div class="team-role">Манікюрист</div>
+          <div class="team-card-line"></div>
+        </div>
+      </div>
+      <div class="team-card fade-up fade-up-delay-4">
+        <div class="team-photo-placeholder">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="18" r="10" stroke="rgba(201,169,110,0.25)" stroke-width="1"/><path d="M6 44c0-10 8-18 18-18s18 8 18 18" stroke="rgba(201,169,110,0.25)" stroke-width="1" fill="none"/></svg>
+        </div>
+        <div class="team-info">
+          <div class="team-name">Катерина</div>
+          <div class="team-role">Стиліст-перукар</div>
+          <div class="team-card-line"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Reviews -->
+<section class="section reviews-bg" id="reviews">
+  <div class="container">
+    <div class="fade-up" style="text-align:center;">
+      <div class="section-eyebrow" style="justify-content:center;"><span class="gold-line"></span> Відгуки <span class="gold-line"></span></div>
+      <h2 class="section-title">Що кажуть <em>клієнти</em></h2>
+    </div>
+    <div class="reviews-slider fade-up fade-up-delay-1">
+      <div class="reviews-track" id="reviewsTrack">
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"Дуже задоволена результатом! Анастасія — справжній майстер фарбування. Саме таке кольорове рішення я шукала роками. Буду повертатися знову і знову."</p>
+          <div class="review-author">Олена К.</div>
+          <div class="review-date">Травень 2025</div>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"Craft Beauty Studio — найкраще місце для весільного образу. Валерія зробила макіяж, який протримався весь день. Всі гості були в захваті від моєї зачіски."</p>
+          <div class="review-author">Тетяна М.</div>
+          <div class="review-date">Квітень 2025</div>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"Чудова атмосфера, уважний персонал і бездоганна якість. Манікюр тримається вже три тижні без жодного сколу. Рекомендую всім своїм подругам!"</p>
+          <div class="review-author">Дар'я С.</div>
+          <div class="review-date">Березень 2025</div>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"Нарешті знайшла свого майстра по бровам! Результат перевершив усі очікування. Студія — справжній острівець краси і спокою в серці Позняків."</p>
+          <div class="review-author">Ірина В.</div>
+          <div class="review-date">Лютий 2025</div>
+        </div>
+      </div>
+      <div class="slider-controls">
+        <button class="slider-btn" id="prevBtn" onclick="changeSlide(-1)">←</button>
+        <div class="slider-dots" id="sliderDots"></div>
+        <button class="slider-btn" id="nextBtn" onclick="changeSlide(1)">→</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Booking -->
+<section class="section" id="booking">
+  <div class="container">
+    <div class="fade-up">
+      <div class="section-eyebrow"><span class="gold-line"></span> Запис</div>
+      <h2 class="section-title">Записатися <em>онлайн</em></h2>
+    </div>
+    <div class="booking-grid">
+      <div class="booking-info fade-up fade-up-delay-1">
+        <p>Залиште заявку і ми зв'яжемося з вами для підтвердження зручного часу. Або зателефонуйте нам напряму.</p>
+        <div class="contact-list">
+          <div class="contact-item">
+            <div class="contact-item-icon">📍</div>
+            <span>вул. Софії Русової, 3В, Київ 02144</span>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon">📞</div>
+            <a href="tel:+380XXXXXXXXX" style="color: var(--text-light); text-decoration:none;">+38 (0XX) XXX-XX-XX</a>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon">⏰</div>
+            <span>Пн–Нд: 09:00 – 20:00</span>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon">📱</div>
+            <span>@craft_beauty.studio</span>
+          </div>
+        </div>
+        <div class="social-links">
+          <a href="https://www.instagram.com/craft_beauty.studio" target="_blank" class="social-link" title="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </a>
+          <a href="https://t.me/craft_beauty_studio" target="_blank" class="social-link" title="Telegram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+          </a>
+          <a href="viber://chat?number=380XXXXXXXXX" class="social-link" title="Viber">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11.4 0C5.5 0 .9 3.9.9 9.5c0 2.9 1.5 5.7 4 7.5v3.5l3.2-2c1 .3 2.2.5 3.3.5 5.9 0 10.5-3.9 10.5-9.5S17.3 0 11.4 0zm0 17.5c-1 0-2-.2-3-.5L5.9 19v-2.9C3.7 14.6 2.4 12.2 2.4 9.5 2.4 4.8 6.4 1.5 11.4 1.5S20.4 4.8 20.4 9.5s-4 8-9 8zm4-10.3c-.2-.4-.8-.7-1.3-.8-.3 0-.5.1-.7.3-.2.2-.3.4-.3.6 0 .2.1.3.2.5 1 1.6 1 3.5 0 5.1-.1.1-.2.3-.2.5 0 .2.1.4.3.6.2.2.4.3.7.3.5-.1 1.1-.4 1.3-.8 1.4-2 1.4-4.3 0-6.3zm-4-1c-1.8 0-3.3 1.5-3.3 3.3S9.6 12.8 11.4 12.8s3.3-1.5 3.3-3.3-1.5-3.3-3.3-3.3zm0 5c-1 0-1.7-.7-1.7-1.7s.7-1.7 1.7-1.7 1.7.7 1.7 1.7-.7 1.7-1.7 1.7z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="fade-up fade-up-delay-2">
+        <div class="booking-form" id="bookingForm">
+          <div class="form-group">
+            <label class="form-label">Ваше ім'я *</label>
+            <input type="text" class="form-input" id="fieldName" placeholder="Ім'я та прізвище" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Телефон *</label>
+            <input type="tel" class="form-input" id="fieldPhone" placeholder="+38 (0XX) XXX-XX-XX" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Послуга *</label>
+            <select class="form-input" id="fieldService">
+              <option value="">Оберіть послугу</option>
+              <option>Стрижка</option>
+              <option>Укладання</option>
+              <option>Фарбування</option>
+              <option>Balayage / Highlights</option>
+              <option>Макіяж</option>
+              <option>Весільний образ</option>
+              <option>Манікюр</option>
+              <option>Педикюр</option>
+              <option>Корекція брів</option>
+              <option>Ламінування вій</option>
+              <option>Нарощення вій</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Коментар</label>
+            <textarea class="form-input form-textarea" id="fieldComment" placeholder="Побажання, зручний час..."></textarea>
+          </div>
+          <button class="form-submit" id="submitBtn" onclick="submitBooking()">
+            Надіслати заявку
+          </button>
+        </div>
+        <div class="form-success" id="formSuccess">
+          <div class="form-success-icon">✨</div>
+          <h3>Заявку надіслано!</h3>
+          <p>Ми зв'яжемося з вами найближчим часом для підтвердження.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" style="font-size:20px;">Craft<span style="color:var(--gold)">'20</span> Beauty Studio</div>
+        <p>Місце твоєї краси. Салон краси Осокорки/Позняки, Київ. Відкрито з 2020 року.</p>
+        <div class="social-links" style="margin-top:20px;">
+          <a href="https://www.instagram.com/craft_beauty.studio" target="_blank" class="social-link" title="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </a>
+          <a href="https://t.me/craft_beauty_studio" target="_blank" class="social-link" title="Telegram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Послуги</div>
+        <div class="footer-links">
+          <a href="#services">Стрижка & Укладання</a>
+          <a href="#services">Фарбування</a>
+          <a href="#services">Макіяж</a>
+          <a href="#services">Манікюр & Педикюр</a>
+          <a href="#services">Брови & Вії</a>
+          <a href="#services">Образ нареченої</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Навігація</div>
+        <div class="footer-links">
+          <a href="#about">Про нас</a>
+          <a href="#gallery">Наші роботи</a>
+          <a href="#team">Команда</a>
+          <a href="#reviews">Відгуки</a>
+          <a href="#booking">Запис онлайн</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Контакти</div>
+        <div class="footer-links">
+          <a href="#">вул. Софії Русової, 3В</a>
+          <a href="#">Осокорки/Позняки, Київ</a>
+          <a href="tel:+380000000000">+38 (0XX) XXX-XX-XX</a>
+          <a href="#">Пн–Нд: 09:00–20:00</a>
+          <a href="https://craft_beauty.studio" target="_blank">craft_beauty.studio</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 Craft Beauty Studio · Всі права захищено</div>
+      <div class="footer-copy">Розроблено з ♥ для краси</div>
+    </div>
+  </div>
+</footer>
+
+<!-- Floating CTA -->
+<div class="float-cta">
+  <div class="float-btn-wrap">
+    <a href="https://t.me/craft_beauty_studio" target="_blank" class="float-btn float-tg" title="Telegram">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+    </a>
+  </div>
+  <div class="float-btn-wrap">
+    <a href="viber://chat?number=380000000000" class="float-btn float-vb" title="Viber">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M11.4 0C5.5 0 .9 3.9.9 9.5c0 2.9 1.5 5.7 4 7.5v3.5l3.2-2c1 .3 2.2.5 3.3.5 5.9 0 10.5-3.9 10.5-9.5S17.3 0 11.4 0zm0 17.5c-1 0-2-.2-3-.5L5.9 19v-2.9C3.7 14.6 2.4 12.2 2.4 9.5 2.4 4.8 6.4 1.5 11.4 1.5S20.4 4.8 20.4 9.5s-4 8-9 8z"/></svg>
+    </a>
+  </div>
+  <div class="float-btn-wrap">
+    <a href="tel:+380000000000" class="float-btn float-call" title="Зателефонувати">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+    </a>
+  </div>
+</div>
+
+<script>
+// ─── Custom Cursor ───────────────────────────────────────────
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+document.addEventListener('mousemove', e => {
+  mouseX = e.clientX; mouseY = e.clientY;
+  cursor.style.left = mouseX + 'px';
+  cursor.style.top = mouseY + 'px';
+});
+
+function animateRing() {
+  ringX += (mouseX - ringX) * 0.12;
+  ringY += (mouseY - ringY) * 0.12;
+  ring.style.left = ringX + 'px';
+  ring.style.top = ringY + 'px';
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+
+document.querySelectorAll('a, button, .service-card, .gallery-item, .team-card').forEach(el => {
+  el.addEventListener('mouseenter', () => ring.classList.add('hovered'));
+  el.addEventListener('mouseleave', () => ring.classList.remove('hovered'));
+});
+
+// ─── Navbar scroll ───────────────────────────────────────────
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ─── Mobile menu ─────────────────────────────────────────────
+function toggleMenu() {
+  const menu = document.getElementById('mobileMenu');
+  const ham = document.getElementById('hamburger');
+  menu.classList.toggle('open');
+  ham.classList.toggle('open');
+}
+
+// ─── Fade-up on scroll ───────────────────────────────────────
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('visible');
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+// ─── Reviews Slider ──────────────────────────────────────────
+let currentSlide = 0;
+const track = document.getElementById('reviewsTrack');
+const cards = track ? track.querySelectorAll('.review-card') : [];
+const dotsContainer = document.getElementById('sliderDots');
+
+if (cards.length > 0 && dotsContainer) {
+  cards.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'slider-dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => goToSlide(i);
+    dotsContainer.appendChild(dot);
+  });
+}
+
+function goToSlide(n) {
+  currentSlide = (n + cards.length) % cards.length;
+  track.style.transform = `translateX(-${currentSlide * 100}%)`;
+  document.querySelectorAll('.slider-dot').forEach((d, i) => {
+    d.classList.toggle('active', i === currentSlide);
+  });
+}
+
+function changeSlide(dir) { goToSlide(currentSlide + dir); }
+
+// Auto-advance
+setInterval(() => changeSlide(1), 5000);
+
+// ─── Booking Form → Telegram ─────────────────────────────────
+async function submitBooking() {
+  const name    = document.getElementById('fieldName').value.trim();
+  const phone   = document.getElementById('fieldPhone').value.trim();
+  const service = document.getElementById('fieldService').value;
+  const comment = document.getElementById('fieldComment').value.trim();
+
+  if (!name || !phone || !service) {
+    showToast('⚠️ Заповніть обов\'язкові поля');
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Надсилаємо...';
+
+  // ── CONFIGURE: вставте свій Bot Token та Chat ID ──────────
+  const BOT_TOKEN = 'YOUR_BOT_TOKEN';   // e.g. 7123456789:AAHxxxxxxxxxxxxxxxxxxxxxxxx
+  const CHAT_ID   = 'YOUR_CHAT_ID';     // e.g. -1001234567890 або ваш user ID
+  // ─────────────────────────────────────────────────────────
+
+  const text = `🌿 *Нова заявка — Craft Beauty Studio*\n\n` +
+    `👤 Ім'я: ${name}\n` +
+    `📞 Телефон: ${phone}\n` +
+    `💅 Послуга: ${service}\n` +
+    `💬 Коментар: ${comment || '—'}\n\n` +
+    `⏰ ${new Date().toLocaleString('uk-UA')}`;
+
+  try {
+    const resp = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: CHAT_ID,
+        text,
+        parse_mode: 'Markdown'
+      })
+    });
+
+    const data = await resp.json();
+
+    if (data.ok) {
+      document.getElementById('bookingForm').style.display = 'none';
+      document.getElementById('formSuccess').style.display = 'block';
+    } else {
+      throw new Error(data.description || 'API error');
+    }
+  } catch (err) {
+    // Fallback: open Telegram with pre-filled message
+    const msg = encodeURIComponent(`Заявка на запис:\nІм'я: ${name}\nТелефон: ${phone}\nПослуга: ${service}\n${comment ? 'Коментар: ' + comment : ''}`);
+    window.open(`https://t.me/craft_beauty_studio?text=${msg}`, '_blank');
+    document.getElementById('bookingForm').style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+  }
+}
+
+// ─── Toast ────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ─── Hero parallax ───────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  const num = document.querySelector('.hero-number');
+  if (num) num.style.transform = `translateY(${window.scrollY * 0.3}px)`;
+});
+</script>
+</body>
+</html>
